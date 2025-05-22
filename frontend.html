@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Average Calculator Microservice</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f7f7f7; }
+    .container { background: #fff; padding: 2rem; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 2px 8px #0001; }
+    h1 { text-align: center; }
+    select, button, input, textarea { padding: 0.5rem; margin: 0.5rem 0; width: 100%; }
+    pre { background: #f0f0f0; padding: 1rem; border-radius: 6px; }
+    .result { margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Average Calculator</h1>
+    <label for="numberType">Select Number Type:</label>
+    <select id="numberType">
+      <option value="e">Even</option>
+      <option value="p">Prime</option>
+      <option value="f">Fibonacci</option>
+      <option value="r">Random</option>
+    </select>
+    <button onclick="fetchNumbers()">Get Numbers & Average</button>
+    <div class="result" id="result"></div>
+    <label for="clientId">Client ID:</label>
+    <input id="clientId" value="cd8527dc-40f4-4747-b1a6-54103d518c3d" style="width:100%;margin-bottom:0.5rem;" readonly />
+    <label for="clientSecret">Client Secret:</label>
+    <input id="clientSecret" value="sBHtbJZhPDZgmSJS" style="width:100%;margin-bottom:0.5rem;" readonly />
+    <label for="accessToken">Access Token:</label>
+    <textarea id="accessToken" style="width:100%;height:4rem;margin-bottom:0.5rem;" readonly>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJNYXBDbGFpbXMiOnsiZXhwIjoxNzQ3ODkzMDc4LCJpYXQiOjE3NDc4OTI3NzgsImlzcyI6IkFmZm9yZG1lZCIsImp0aSI6ImNkODUyN2RjLTQwZjQtNDc0Ny1iMWE2LTU0MTAzZDUxOGMzZCIsInN1YiI6IjIyMDAwMzEyMzNjc2VoQGdtYWlsLmNvbSJ9LCJlbWFpbCI6IjIyMDAwMzEyMzNjc2VoQGdtYWlsLmNvbSIsIm5hbWUiOiJrIHNpdmEgc2VraGFyIiwicm9sbE5vIjoiMjIwMDAzMTIzMyIsImFjY2Vzc0NvZGUiOiJiZVRKakoiLCJjbGllbnRJRCI6ImNkODUyN2RjLTQwZjQtNDc0Ny1iMWE2LTU0MTAzZDUxOGMzZCIsImNsaWVudFNlY3JldCI6InNCSHRiSlpoUERaZ21TSlMifQ.T3dq_Pj3S9Tfn_tL6plLqbcFoovaherzEAGDeYHtVhY</textarea>
+  </div>
+  <script>
+    async function fetchNumbers() {
+      const type = document.getElementById('numberType').value;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = 'Loading...';
+      try {
+        const res = await fetch(`/numbers/${type}`);
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || 'Network response was not ok');
+        }
+        const data = await res.json();
+        resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+      } catch (err) {
+        resultDiv.innerHTML = `<span style="color:red">Error fetching data: ${err.message}</span>`;
+      }
+    }
+  </script>
+</body>
+</html>
